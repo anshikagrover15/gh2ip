@@ -46,12 +46,12 @@ class DistBtoD(models.Model):
         ]
 
     def __str__(self):
-        return self.distance
+        return str(self.distance)
 
 class DistBtoP(models.Model):
     power_plant = models.ForeignKey(PowerPlant, on_delete=models.CASCADE)
     block = models.ForeignKey(Block, on_delete=models.CASCADE)
-    distance = models.FloatField(help_text="Distance in kilometers/miles")
+    distance = models.FloatField(help_text="Distance in kilometers")
     
     class Meta:
         unique_together = [['power_plant', 'block']]
@@ -61,4 +61,4 @@ class DistBtoP(models.Model):
         ]
 
     def __str__(self):
-        return self.distance
+        return str(self.distance)
