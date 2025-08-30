@@ -51,12 +51,12 @@ const indiaBounds = L.latLngBounds(
 const map = L.map("map", {
   center: [20.5937, 78.9629],
   zoom: 5,
-  // maxBounds: indiaBounds,
-  // maxBoundsViscosity: 1.0, // This makes the bounds "hard", user cannot drag outside
+  maxBounds: indiaBounds,
+  maxBoundsViscosity: 1.0, // This makes the bounds "hard", user cannot drag outside
 });
 
 // Set a minimum zoom level to prevent zooming out too far
-// map.setMinZoom(5);
+map.setMinZoom(5);
 
 const updateMapTheme = () => {
   const theme = docElement.classList.contains("dark") ? "dark" : "light";
