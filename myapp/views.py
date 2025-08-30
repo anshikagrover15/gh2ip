@@ -1,22 +1,24 @@
 from django.shortcuts import render
 import json
 import csv
+from .models import *
 
-filename = "land_price_grid_2.csv"
+# filename = "land_price_grid_2.csv"
 
 data_list = []
 
-with open(filename, mode="r", newline="", encoding="utf-8") as file:
-    reader = csv.reader(file)
-    header = next(reader)  # Skip header row
+# with open(filename, mode="r", newline="", encoding="utf-8") as file:
+#     reader = csv.reader(file)
+#     header = next(reader)  # Skip header row
     
-    for row in reader:
-        latitude = float(row[0])
-        longitude = float(row[1])
-        land_price = float(row[2])
+#     for row in reader:
+#         latitude = float(row[0])
+#         longitude = float(row[1])
+#         land_price = float(row[2])
         
-        data_list.append([latitude, longitude, land_price])
-print(data_list)
+#         data_list.append([latitude, longitude, land_price])
+# print(data_list)
+
 template_data = {
     "layers": [
         {"id": "existingAssets", "name": "Existing & Planned Assets", "checked": True},
@@ -37,8 +39,8 @@ template_data = {
         "assets": [
   ],
         "renewables": [
-            {"id": 1, "type": "Solar", "name": "Bhadla Solar Park", "lat": 27.5333, "lng": 71.9167, "potential": 2245},
-            {"id": 2, "type": "Wind", "name": "Muppandal Wind Farm", "lat": 8.2718, "lng": 77.5358, "potential": 1500}
+            # {"id": 1, "type": "Solar", "name": "Bhadla Solar Park", "lat": 27.5333, "lng": 71.9167, "potential": 2245},
+            # {"id": 2, "type": "Wind", "name": "Muppandal Wind Farm", "lat": 8.2718, "lng": 77.5358, "potential": 1500}
         ],
         "demand": [
             {"id": 1, "name": "Industrial Hub - Gujarat", "lat": 23.0225, "lng": 72.5714, "demand": "High"},
@@ -61,13 +63,32 @@ template_data = {
 }
 
 
-with open("renewable_power_plants_india_large.json", "r") as f:
-    plants = json.load(f)
+# with open("renewable_power_plants_india_large.json", "r") as f:
+#     plants = json.load(f)
 
 
-for i, plant in enumerate(plants):
-    template_data["map_data"]["renewables"].append({"id": i, **plant })
+# for i, plant in enumerate(plants):
+#     template_data["map_data"]["renewables"].append({"id": i, **plant })
+
 def home(request):
+
+    # Power Plants
+    plants = list(PowerPlant.objects.all().values())
+    for i, plant in enumerate(plants):
+        plant['lat'] = float(plant['latitude'])
+        plant['lng'] = float(plant['longitude'])
+        del plant['latitude']
+        del plant['longitude']
+        template_data["map_data"]["renewables"].append({"id": i, **plant })
+
+    # Blocks
+    blocks = list(Block.objects.all().values())
+    for block in blocks:
+        latitude = float(block['latitude'])
+        longitude = float(block['longitude'])
+        land_price = float(block['land_price'])
+        data_list.append([latitude, longitude, land_price])
+
     context = {
         "template_data": template_data,
         "map_data_json": json.dumps(template_data["map_data"])
