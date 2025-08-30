@@ -70,7 +70,7 @@ def home(request):
         template_data["map_data"]["renewables"].append({"id": i, **plant })
 
     # Blocks
-    blocks = list(Block.objects.all().values())
+    blocks = list(BlockTable.objects.all().values())
     for block in blocks:
         latitude = float(block['latitude'])
         longitude = float(block['longitude'])
@@ -95,7 +95,7 @@ def home(request):
     return render(request, 'myapp/home.html', context)
 
 def block_scores(request):
-    blocks = Block.objects.all()
+    blocks = BlockTable.objects.all()
     plants = PowerPlant.objects.all()
     demand_locs = DemandLocation.objects.all()
     for block in blocks:
@@ -105,22 +105,22 @@ def block_scores(request):
 
         for demand_loc in demand_locs:
             try:
-                distance_obj = DistBtoD.objects.get(
+                distance_obj = DistBtoDTable.objects.get(
                 block_id=block.id,
                 demand_location_id=demand_loc.id
                 )
                 demand_locs_score += (distance_obj.distance * demand_loc.weight)
-            except DistBtoD.DoesNotExist:
+            except DistBtoDTable.DoesNotExist:
                 pass
         
         for plant in plants:
             try:
-                distance_obj = DistBtoP.objects.get(
+                distance_obj = DistBtoPTable.objects.get(
                 block_id=block.id,
                 power_plant_id=plant.id
                 )
                 plants_score += (distance_obj.distance * plant.weight)
-            except DistBtoP.DoesNotExist:
+            except DistBtoPTable.DoesNotExist:
                 pass
 
         land_price_weight = 1

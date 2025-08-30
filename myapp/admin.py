@@ -12,17 +12,17 @@ class DemandLocationAdmin(admin.ModelAdmin):
     list_display = [f.name for f in DemandLocation._meta.fields]
     search_fields = [f.name for f in DemandLocation._meta.fields]
 
-@admin.register(DistBtoD)
+@admin.register(DistBtoDTable)
 class DistBtoDAdmin(admin.ModelAdmin):
-    list_display = [f.name for f in DistBtoD._meta.fields]
-    search_fields = [f.name for f in DistBtoD._meta.fields]
+    list_display = [f.name for f in DistBtoDTable._meta.fields]
+    search_fields = [f.name for f in DistBtoDTable._meta.fields]
 
-@admin.register(DistBtoP)
+@admin.register(DistBtoPTable)
 class DistBtoPAdmin(admin.ModelAdmin):
-    list_display = [f.name for f in DistBtoP._meta.fields]
-    search_fields = [f.name for f in DistBtoP._meta.fields]
+    list_display = [f.name for f in DistBtoPTable._meta.fields]
+    search_fields = [f.name for f in DistBtoPTable._meta.fields]
 
-@admin.register(Block)
+@admin.register(BlockTable)
 class BlockAdmin(admin.ModelAdmin):
-    list_display = [f.name for f in Block._meta.fields]
-    search_fields = [f.name for f in Block._meta.fields]
+    list_display = [f.name for f in BlockTable._meta.fields]
+    search_fields = [f.name for f in BlockTable._meta.fields]
