@@ -81,11 +81,7 @@ function populateLayers() {
     mapData.renewables.forEach(s => L.marker([s.lat, s.lng], { icon: icons.renewable(s.type) }).bindPopup(`<b>${s.name}</b><br>Type: ${s.type}<br>Potential: ${s.potential} MW`).addTo(layerGroups.renewables));
     mapData.demand.forEach(c => L.circle([c.lat, c.lng], { color: '#ef4444', fillColor: '#ef4444', fillOpacity: 0.3, radius: c.demand === 'High' ? 100000 : 50000 }).bindPopup(`<b>${c.name}</b><br>Demand: ${c.demand}`).addTo(layerGroups.demand));
     L.geoJSON(mapData.transport, { style: { color: '#4b5563', weight: 2, dashArray: '5, 5' } }).bindPopup('Proposed Hydrogen Pipeline').addTo(layerGroups.transport);
-    // L.heatLayer(mapData.heatData, {
-    //       radius: 25,
-    //       blur: 15,
-    //       maxZoom: 17,
-    //     }).addTo(layerGroups.landPrices);
+
     L.polyline([
     [30.74, 75.75],
     [30.74, 79.5],
@@ -95,7 +91,12 @@ function populateLayers() {
 ],{
         dashArray: '5, 10',
     }).addTo(layerGroups.dottedRegion);
-
+    console.log(mapData.landPrices);
+    L.heatLayer(mapData.landPrices, {
+          radius: 25,
+          blur: 15,
+          maxZoom: 17,
+        }).addTo(layerGroups.landPrices);
 }
 
 

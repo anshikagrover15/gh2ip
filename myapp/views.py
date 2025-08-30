@@ -16,7 +16,7 @@ with open(filename, mode="r", newline="", encoding="utf-8") as file:
         land_price = float(row[2])
         
         data_list.append([latitude, longitude, land_price])
-
+print(data_list)
 template_data = {
     "layers": [
         {"id": "existingAssets", "name": "Existing & Planned Assets", "checked": True},
@@ -33,6 +33,7 @@ template_data = {
         {"id": "costOpt", "name": "Cost Optimisation", "value": 90}
     ],
     "map_data": {
+
         "assets": [
   ],
         "renewables": [
@@ -53,9 +54,10 @@ template_data = {
         "optimisedLocations": [
             {"lat": 25.4358, "lng": 81.8463, "score": 95, "reason": "High solar potential, proximity to industrial demand."},
             {"lat": 17.3850, "lng": 78.4867, "score": 88, "reason": "Balanced renewable access and emerging tech hub demand."}
-        ]
+        ],
+        "landPrices":data_list
     },
-    "landPrices":data_list
+    
 }
 
 
