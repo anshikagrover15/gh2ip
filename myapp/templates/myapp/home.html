@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Green Hydrogen Infrastructure Platform</title>
+    
+    <!-- External CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <link rel="stylesheet" href="{% static 'myapp/style.css' %}">
+
+    <!-- External JavaScript Libraries -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="transition-colors duration-300">
+    <!-- The rest of your body tag is IDENTICAL to the previous version -->
+    <!-- ... header, main content, sidebar, map container ... -->
+    <div class="flex flex-col h-screen">
+        <!-- Header -->
+        <header class="bg-card shadow-md z-20 border-b border-custom">
+            <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <svg class="h-8 w-8 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <h1 class="text-xl font-bold">Green Hydrogen Infrastructure Platform</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="theme-toggle" class="p-2 rounded-full text-muted hover:bg-gray-100 dark:hover:bg-slate-700">
+                        <svg id="theme-icon-light" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        <svg id="theme-icon-dark" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </header>
+        <!-- Main content -->
+        <div class="flex flex-1 overflow-hidden">
+            <!-- Sidebar -->
+            <aside class="w-96 bg-card p-6 overflow-y-auto shadow-lg z-10 flex flex-col border-r border-custom">
+                <div class="flex-1">
+                    <h2 class="text-lg font-semibold mb-4">Controls & Optimisation</h2>
+                    <div class="mb-6">
+                        <h3 class="font-semibold text-muted mb-3 text-sm tracking-wider uppercase">Data Layers</h3>
+                        <div class="space-y-3">
+                            {% for layer in template_data.layers %}
+                            <div>
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="{{ layer.id }}" class="h-4 w-4 rounded border-gray-300 text-green-500 focus:ring-green-500" {% if layer.checked %}checked{% endif %}>
+                                    <span class="ml-3 text-sm">{{ layer.name }}</span>
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="mb-6">
+                        <h3 class="font-semibold text-muted mb-3 text-sm tracking-wider uppercase">Site Selection Optimisation</h3>
+                        <div class="space-y-4">
+                            {% for param in template_data.optimisation_params %}
+                            <div>
+                                <label for="{{ param.id }}" class="block text-sm font-medium mb-1">{{ param.name }}</label>
+                                <input type="range" id="{{ param.id }}" min="0" max="100" value="{{ param.value }}" class="w-full h-2 bg-gray-200 dark:bg-slate-600 rounded-lg appearance-none cursor-pointer">
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <button id="runOptimisation" class="mt-5 w-full bg-green-600 dark:bg-green-500 text-white dark:text-slate-900 font-bold py-2.5 px-4 rounded-lg hover:bg-green-700 dark:hover:bg-green-400 transition duration-300 flex items-center justify-center space-x-2">
+                            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l5.447 2.724A1 1 0 0021 16.382V5.618a1 1 0 00-.553-.894L15 2m-6 5l6-3m0 11V2"></path></svg>
+                            <span>Find Optimal Locations</span>
+                        </button>
+                    </div>
+                </div>
+            </aside>
+            <!-- Map container -->
+            <main class="flex-1 relative">
+                <div id="map" class="h-full w-full"></div>
+                <div id="loading-overlay" class="absolute inset-0 bg-card bg-opacity-75 flex items-center justify-center hidden z-30">
+                    <div class="text-center">
+                        <svg class="animate-spin h-8 w-8 text-green-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                        <p class="mt-2 font-medium">Calculating optimal locations...</p>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <!-- 
+      Injecting data from backend into a global JavaScript variable.
+      Use the pre-stringified JSON and the 'safe' filter.
+    -->
+    <script>
+        var mapData = {{ map_data_json | safe }};
+    </script>
+    
+
+    <script src="{% static 'myapp/script.js' %}"></script>
+</body>
+</html>
