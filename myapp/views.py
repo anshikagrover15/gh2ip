@@ -88,7 +88,7 @@ def home(request):
         latitude = float(block['latitude'])
         longitude = float(block['longitude'])
         land_price = float(block['land_price'])
-        score = float(block['score'])
+        score = block_scores(0.9,0.7,1, block)
         data_list.append([latitude, longitude, land_price, score])
 
     # Demand Locations
@@ -107,12 +107,9 @@ def home(request):
     }
     return render(request, 'myapp/home.html', context)
 
-def block_scores(request):
-    blocks = BlockTable.objects.all()
-    plants = PowerPlant.objects.all()
-    demand_locs = DemandLocation.objects.all()
-    for block in blocks:
-        lp = block.land_price
+def block_scores(m1, m2, m3, block):
+
+    lp = block.land_price
         # demand_locs_score = 0
         # plants_score = 0
 
@@ -136,12 +133,9 @@ def block_scores(request):
         #     except DistBtoPTable.DoesNotExist:
         #         pass
 
-        land_price_weight = 1
-        block_score = (block.distance_demand + block.distance_plants + (lp*land_price_weight))/3
-        block.score = block_score
-        block.save()
-        print(block)
+    block_score = ((block.distance_demand*m2) + (block.distance_plants*m1) + (lp*m3))/(m1+m2+m3)
+
     
-    return HttpResponse('Block Scores Updated!')
+    return block_score
 
 
