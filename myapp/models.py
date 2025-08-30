@@ -27,6 +27,8 @@ class Block(models.Model):
     latitude = models.DecimalField(max_digits=9, decimal_places=6)
     longitude = models.DecimalField(max_digits=9, decimal_places=6)
     land_price = models.FloatField(default=None)
+    distance_demand = models.FloatField(default=0)
+    distance_plants = models.FloatField(default=0)
     score = models.FloatField(default=0)
 
     def __str__(self):
