@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, HttpResponse
 import json
 import csv
 from .models import *
@@ -94,4 +94,41 @@ def home(request):
         "map_data_json": json.dumps(template_data["map_data"])
     }
     return render(request, 'myapp/home.html', context)
+
+def block_scores(request):
+    blocks = Block.objects.all()
+    plants = PowerPlant.objects.all()
+    demand_locs = DemandLocation.objects.all()
+    for block in blocks:
+        lp = block.land_price
+        demand_locs_score = 0
+        plants_score = 0
+
+        for demand_loc in demand_locs:
+            try:
+                distance_obj = DistBtoD.objects.get(
+                block_id=block.id,
+                demand_location_id=demand_loc.id
+                )
+                demand_locs_score += (distance_obj.distance * demand_loc.weight)
+            except DistBtoD.DoesNotExist:
+                pass
+        
+        for plant in plants:
+            try:
+                distance_obj = DistBtoP.objects.get(
+                block_id=block.id,
+                power_plant_id=plant.id
+                )
+                plants_score += (distance_obj.distance * plant.weight)
+            except DistBtoP.DoesNotExist:
+                pass
+
+        land_price_weight = 1
+        block_score = demand_locs_score + plants_score + (lp*land_price_weight)
+        block.score = block_score
+        block.save()
+    
+    return HttpResponse('Block Scores Updated!')
+
 
