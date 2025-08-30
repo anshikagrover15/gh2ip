@@ -131,11 +131,11 @@ function getCookie(name) {
     }
     return cookieValue;
 }
-function populateLayers() {
+function populateLayers(data) {
   mapData.renewables.forEach((s) =>
     L.marker([s.lat, s.lng], { icon: icons.renewable(s.type) })
       .bindPopup(
-        `<b>${s.name}</b><br>Type: ${s.type}<br>`
+        `<b>${s.name}</b><br>Type: ${s.type}<br>Renewable Energy Plant`
       )
       .addTo(layerGroups.renewables)
   );
@@ -143,10 +143,10 @@ function populateLayers() {
     L.circle([c.lat, c.lng], {
       color: "#ef4444",
       fillColor: "#ef4444",
-      fillOpacity: 0.3,
+      fillOpacity: 0.2,
       radius: c.demand === "High" ? 100000 : 50000,
     })
-      .bindPopup(`<b>${c.name}</b><br>Demand: ${c.demand}`)
+      .bindPopup(`<b>${c.name}</b><br>Demand Center`)
       .addTo(layerGroups.demand)
   );
 
@@ -162,8 +162,8 @@ function populateLayers() {
       dashArray: "5, 10",
     }
   ).addTo(layerGroups.dottedRegion);
-  console.log(mapData.landPrices);
-  L.heatLayer(mapData.landPrices, {
+  console.log(data);
+  L.heatLayer(data, {
     radius: 50,
     blur: 0,
     maxZoom: 20,
@@ -203,7 +203,7 @@ document.getElementById("runOptimisation").addEventListener("click", () => {
       },
       body: JSON.stringify(mults)
   })
-  .then(response => response.json()) 
+  .then(response => response.json()).then(json_response => populateLayers(json_response))
   .catch((error) => {
       console.error('Error:', error);
   });

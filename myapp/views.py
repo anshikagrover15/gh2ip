@@ -64,12 +64,21 @@ def home(request):
         try:
             data = json.loads(request.body)
 
-            plantMult = data.get('plantMult')
-            demandMult = data.get('demandMult')
-            landMult = data.get('landMult')
-
+            plantMult = int(data.get('plantMult'))
+            demandMult = int(data.get('demandMult'))
+            landMult = int(data.get('landMult'))
+            blocks = list(BlockTable.objects.all().values())
             print(f"{plantMult}, {demandMult}, {landMult}")
-            return JsonResponse({'status': 'ok', 'message': 'Data received successfully!'})
+            data_list = []
+            for block in blocks:
+
+
+                latitude = float(block['latitude'])
+                longitude = float(block['longitude'])
+                score = block_scores(plantMult, demandMult,landMult, block)
+                data_list.append([latitude, longitude, score])
+
+            return JsonResponse({'status': 'ok', 'message': data_list})
 
         except json.JSONDecodeError:
             return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
@@ -84,12 +93,13 @@ def home(request):
 
     # Blocks
     blocks = list(BlockTable.objects.all().values())
+    data_list=[]
     for block in blocks:
         latitude = float(block['latitude'])
         longitude = float(block['longitude'])
-        land_price = float(block['land_price'])
         score = block_scores(0.9,0.7,1, block)
-        data_list.append([latitude, longitude, land_price, score])
+        data_list.append([latitude, longitude, score])
+        template_data["map_data"]["landPrices"].append([latitude, longitude, score])
 
     # Demand Locations
     demand_locs = list(DemandLocation.objects.all().values())
@@ -109,7 +119,7 @@ def home(request):
 
 def block_scores(m1, m2, m3, block):
 
-    lp = block.land_price
+    lp = block["land_price"]
         # demand_locs_score = 0
         # plants_score = 0
 
@@ -132,8 +142,8 @@ def block_scores(m1, m2, m3, block):
         #         plants_score += (distance_obj.distance * plant.weight)
         #     except DistBtoPTable.DoesNotExist:
         #         pass
-
-    block_score = ((block.distance_demand*m2) + (block.distance_plants*m1) + (lp*m3))/(m1+m2+m3)
+    
+    block_score = ((float(block["distance_demand"])*int(m2)) + (float(block["distance_plants"])*int(m1)) + (lp*int(m3)))/(m1+m2+m3)
 
     
     return block_score
