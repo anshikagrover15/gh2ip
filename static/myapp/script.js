@@ -151,7 +151,7 @@ function populateLayers() {
   console.log(mapData.landPrices);
   L.heatLayer(mapData.landPrices, {
     radius: 50,
-    blur: 15,
+    blur: 0,
     maxZoom: 20,
   }).addTo(layerGroups.landPrices);
 }
