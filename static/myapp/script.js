@@ -123,7 +123,6 @@ function getCookie(name) {
         const cookies = document.cookie.split(';');
         for (let i = 0; i < cookies.length; i++) {
             const cookie = cookies[i].trim();
-            // Does this cookie string begin with the name we want?
             if (cookie.substring(0, name.length + 1) === (name + '=')) {
                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                 break;
@@ -196,19 +195,15 @@ document.getElementById("runOptimisation").addEventListener("click", () => {
     'demandMult': demandMult.value,
     'landMult': landMult.value 
   }
-  fetch('/', { // The URL on your Django site
+  fetch('/', { 
       method: 'POST',
       headers: {
           'Content-Type': 'application/json',
-          'X-CSRFToken': getCookie('csrftoken') // Important for Django security
+          'X-CSRFToken': getCookie('csrftoken')
       },
-      body: JSON.stringify(mults) // Convert the JS object to a JSON string
+      body: JSON.stringify(mults)
   })
-  .then(response => response.json()) // Parse the JSON response from the server
-  .then(data => {
-      console.log('Success:', data); // Log the response data from Django
-      // e.g., data could be { status: 'ok', message: 'Data received!' }
-  })
+  .then(response => response.json()) 
   .catch((error) => {
       console.error('Error:', error);
   });
