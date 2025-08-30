@@ -50,6 +50,7 @@ const map = L.map('map', {
     maxBoundsViscosity: 1.0 // This makes the bounds "hard", user cannot drag outside
 });
 
+
 // Set a minimum zoom level to prevent zooming out too far
 map.setMinZoom(5);
 
@@ -66,7 +67,7 @@ const updateMapTheme = () => {
 
 // --- DYNAMIC DATA FROM BACKEND ---
 // The 'mapData' variable is now globally available, injected from index.html
-const layerGroups = { assets: L.layerGroup(), renewables: L.layerGroup(), demand: L.layerGroup(), transport: L.layerGroup(), optimised: L.layerGroup() };
+const layerGroups = { assets: L.layerGroup(), renewables: L.layerGroup(), demand: L.layerGroup(), transport: L.layerGroup(), optimised: L.layerGroup(), landPrices: L.layerGroup(), dottedRegion: L.layerGroup()};
 
 const icons = {
     plant: (status) => L.divIcon({ className: 'custom-div-icon', html: `<div style="background-color: ${status === 'Existing' ? '#22c55e' : '#f97316'};" class="h-6 w-6 rounded-full border-2 border-white shadow-md"></div>`, iconSize: [24, 24], iconAnchor: [12, 12] }),
@@ -80,13 +81,32 @@ function populateLayers() {
     mapData.renewables.forEach(s => L.marker([s.lat, s.lng], { icon: icons.renewable(s.type) }).bindPopup(`<b>${s.name}</b><br>Type: ${s.type}<br>Potential: ${s.potential} MW`).addTo(layerGroups.renewables));
     mapData.demand.forEach(c => L.circle([c.lat, c.lng], { color: '#ef4444', fillColor: '#ef4444', fillOpacity: 0.3, radius: c.demand === 'High' ? 100000 : 50000 }).bindPopup(`<b>${c.name}</b><br>Demand: ${c.demand}`).addTo(layerGroups.demand));
     L.geoJSON(mapData.transport, { style: { color: '#4b5563', weight: 2, dashArray: '5, 5' } }).bindPopup('Proposed Hydrogen Pipeline').addTo(layerGroups.transport);
+    // L.heatLayer(mapData.heatData, {
+    //       radius: 25,
+    //       blur: 15,
+    //       maxZoom: 17,
+    //     }).addTo(layerGroups.landPrices);
+    L.polyline([
+    [30.74, 75.75],
+    [30.74, 79.5],
+    [20.5, 79.5],
+    [20.5, 75.5],
+    [30.74, 75.75],
+],{
+        dashArray: '5, 10',
+    }).addTo(layerGroups.dottedRegion);
+
 }
+
+
 
 const layerControlCheckboxes = { 
     existingAssets: layerGroups.assets, 
     renewableSources: layerGroups.renewables, 
     demandCenters: layerGroups.demand, 
-    transportLogistics: layerGroups.transport 
+    transportLogistics: layerGroups.transport, 
+    landPrices: layerGroups.landPrices,
+    dottedRegion: layerGroups.dottedRegion
 };
 
 for (const [id, group] of Object.entries(layerControlCheckboxes)) {

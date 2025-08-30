@@ -1,13 +1,31 @@
 from django.shortcuts import render
 import json
-# Create your views here.
+import csv
+
+filename = "land_price_grid_2.csv"
+
+data_list = []
+
+with open(filename, mode="r", newline="", encoding="utf-8") as file:
+    reader = csv.reader(file)
+    header = next(reader)  # Skip header row
+    
+    for row in reader:
+        latitude = float(row[0])
+        longitude = float(row[1])
+        land_price = float(row[2])
+        
+        data_list.append([latitude, longitude, land_price])
 
 template_data = {
     "layers": [
         {"id": "existingAssets", "name": "Existing & Planned Assets", "checked": True},
         {"id": "renewableSources", "name": "Renewable Energy Sources", "checked": True},
         {"id": "demandCenters", "name": "Demand Centers", "checked": True},
-        {"id": "transportLogistics", "name": "Transport Logistics", "checked": True}
+        {"id": "transportLogistics", "name": "Transport Logistics", "checked": True},
+        {"id":"landPrices", "name":"Land Price heatmap", "checked": True},
+        {"id":"dottedRegion", "name":"Dotted Region", "checked": True}
+
     ],
     "optimisation_params": [
         {"id": "proximityRenewable", "name": "Proximity to Renewables", "value": 70},
@@ -36,7 +54,8 @@ template_data = {
             {"lat": 25.4358, "lng": 81.8463, "score": 95, "reason": "High solar potential, proximity to industrial demand."},
             {"lat": 17.3850, "lng": 78.4867, "score": 88, "reason": "Balanced renewable access and emerging tech hub demand."}
         ]
-    }
+    },
+    "landPrices":data_list
 }
 
 
