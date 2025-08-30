@@ -70,15 +70,26 @@ def home(request):
             blocks = list(BlockTable.objects.all().values())
             print(f"{plantMult}, {demandMult}, {landMult}")
             data_list = []
+            top_list = [(None, None, float('inf')), (None, None, float('inf')), (None, None,float('inf'))]  # keep track of 3 top_list
             for block in blocks:
-
 
                 latitude = float(block['latitude'])
                 longitude = float(block['longitude'])
                 score = block_scores(plantMult, demandMult,landMult, block)
                 data_list.append([latitude, longitude, score])
+                if score < top_list[0][2]:
+                    top_list[2] = top_list[1]
+                    top_list[1] = top_list[0]
+                    top_list[0] = (latitude, longitude, score)
+                elif score < top_list[1][2]:
+                    top_list[2] = top_list[1]
+                    top_list[1] = (latitude, longitude, score)
+                elif score < top_list[2][2]:
+                    top_list[2] = (latitude, longitude, score)
+            
 
-            return JsonResponse({'status': 'ok', 'message': data_list})
+
+            return JsonResponse({'status': 'ok', 'message': data_list, 'top':top_list})
 
         except json.JSONDecodeError:
             return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
