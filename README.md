@@ -5,6 +5,7 @@ This project aims to develop a sophisticated, map-based tool for optimising the 
 ## Installation
 Make your virtual environment and then install following
 `$ pip install Django`
+`$ python manage.py migrate`
 
 ## Running the program
 `$ python manage.py runserver`
