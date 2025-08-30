@@ -1,4 +1,5 @@
 from django.shortcuts import render, HttpResponse
+from django.http import JsonResponse
 import json
 import csv
 from .models import *
@@ -30,7 +31,7 @@ template_data = {
     "optimisation_params": [
         {"id": "proximityRenewable", "name": "Proximity to Renewables", "value": 70},
         {"id": "marketDemand", "name": "Market Demand", "value": 80},
-        {"id": "costOpt", "name": "Cost Optimisation", "value": 90}
+        {"id": "landCost", "name": "Land cost", "value": 90}
     ],
     "map_data": {
         "renewables": [
@@ -59,7 +60,19 @@ template_data = {
 #     template_data["map_data"]["renewables"].append({"id": i, **plant })
 
 def home(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
 
+            plantMult = data.get('plantMult')
+            demandMult = data.get('demandMult')
+            landMult = data.get('landMult')
+
+            print(f"{plantMult}, {demandMult}, {landMult}")
+            return JsonResponse({'status': 'ok', 'message': 'Data received successfully!'})
+
+        except json.JSONDecodeError:
+            return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
     # Power Plants
     plants = list(PowerPlant.objects.all().values())
     for i, plant in enumerate(plants):

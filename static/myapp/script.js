@@ -117,6 +117,21 @@ const icons = {
     }),
 };
 
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
 function populateLayers() {
   mapData.renewables.forEach((s) =>
     L.marker([s.lat, s.lng], { icon: icons.renewable(s.type) })
@@ -173,6 +188,30 @@ for (const [id, group] of Object.entries(layerControlCheckboxes)) {
 
 document.getElementById("runOptimisation").addEventListener("click", () => {
   const loadingOverlay = document.getElementById("loading-overlay");
+  const plantMult = document.getElementById("proximityRenewable");
+  const demandMult = document.getElementById("marketDemand");
+  const landMult = document.getElementById("landCost");
+  const mults = {
+    'plantMult': plantMult.value,
+    'demandMult': demandMult.value,
+    'landMult': landMult.value 
+  }
+  fetch('/', { // The URL on your Django site
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookie('csrftoken') // Important for Django security
+      },
+      body: JSON.stringify(mults) // Convert the JS object to a JSON string
+  })
+  .then(response => response.json()) // Parse the JSON response from the server
+  .then(data => {
+      console.log('Success:', data); // Log the response data from Django
+      // e.g., data could be { status: 'ok', message: 'Data received!' }
+  })
+  .catch((error) => {
+      console.error('Error:', error);
+  });
   loadingOverlay.classList.remove("hidden");
   layerGroups.optimised.clearLayers();
   setTimeout(() => {
