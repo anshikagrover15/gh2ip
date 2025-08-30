@@ -75,7 +75,18 @@ def home(request):
         latitude = float(block['latitude'])
         longitude = float(block['longitude'])
         land_price = float(block['land_price'])
-        data_list.append([latitude, longitude, land_price])
+        score = float(block['score'])
+        data_list.append([latitude, longitude, land_price, score])
+
+    # Demand Locations
+    demand_locs = list(DemandLocation.objects.all().values())
+    for i, demand_loc in enumerate(demand_locs):
+        demand_loc['lat'] = float(demand_loc['latitude'])
+        demand_loc['lng'] = float(demand_loc['longitude'])
+        del demand_loc['latitude']
+        del demand_loc['longitude']
+        template_data["map_data"]["demand"].append({"id": i, **demand_loc })
+        
 
     context = {
         "template_data": template_data,
