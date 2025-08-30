@@ -1,0 +1,181 @@
+[
+  {
+    "name": "Bhadla Solar Park",
+    "type": "Solar",
+    "lat": 27.5397,
+    "lng": 71.9153
+  },
+  {
+    "name": "Pavagada Solar Park",
+    "type": "Solar",
+    "lat": 14.2444,
+    "lng": 77.4607
+  },
+  {
+    "name": "Kurnool Ultra Mega Solar Park",
+    "type": "Solar",
+    "lat": 15.6815,
+    "lng": 78.2837
+  },
+  {
+    "name": "Adani Green Solar Park",
+    "type": "Solar",
+    "lat": 24.1667,
+    "lng": 70.1667
+  },
+  {
+    "name": "Kamuthi Solar Plant",
+    "type": "Solar",
+    "lat": 9.3597,
+    "lng": 78.3756
+  },
+  {
+    "name": "Charanka Solar Park",
+    "type": "Solar",
+    "lat": 23.8762,
+    "lng": 71.6497
+  },
+  {
+    "name": "Rewa Ultra Mega Solar",
+    "type": "Solar",
+    "lat": 24.5647,
+    "lng": 81.2728
+  },
+  {
+    "name": "Nathpa Jhakri Hydroelectric Power Plant",
+    "type": "Hydro",
+    "lat": 31.5453,
+    "lng": 77.9767
+  },
+  {
+    "name": "Koyna Hydroelectric Project",
+    "type": "Hydro",
+    "lat": 17.3992,
+    "lng": 73.7511
+  },
+  {
+    "name": "Tehri Dam",
+    "type": "Hydro",
+    "lat": 30.3778,
+    "lng": 78.4806
+  },
+  {
+    "name": "Sardar Sarovar Dam",
+    "type": "Hydro",
+    "lat": 21.8379,
+    "lng": 73.7356
+  },
+  {
+    "name": "Bhakra Nangal Hydroelectric Project",
+    "type": "Hydro",
+    "lat": 31.4167,
+    "lng": 76.42
+  },
+  {
+    "name": "Indira Sagar Hydroelectric Project",
+    "type": "Hydro",
+    "lat": 22.1879,
+    "lng": 76.4755
+  },
+  {
+    "name": "Subansiri Lower Hydroelectric Project",
+    "type": "Hydro",
+    "lat": 27.3266,
+    "lng": 94.2068
+  },
+  {
+    "name": "Ramagundam Hydroelectric Project",
+    "type": "Hydro",
+    "lat": 18.755,
+    "lng": 79.4746
+  },
+
+  {
+    "name": "Dulhasti Hydroelectric Project",
+    "type": "Hydro",
+    "lat": 33.1898,
+    "lng": 75.7232
+  },
+  {
+    "name": "Brahmanvel Wind Farm",
+    "type": "Wind",
+    "lat": 21.0116,
+    "lng": 74.7198
+  },
+  {
+    "name": "Sidhpur-2 Wind Power Plant",
+    "type": "Wind",
+    "lat": 22.2385,
+    "lng": 68.9712
+  },
+
+  {
+    "name": "Dhalgaon Wind Farm",
+    "type": "Wind",
+    "lat": 17.4167,
+    "lng": 74.5667
+  },
+  {
+    "name": "Vankusawade Wind Park",
+    "type": "Wind",
+    "lat": 17.6343,
+    "lng": 73.85
+  },
+  {
+    "name": "Tuljapur Wind Farm",
+    "type": "Wind",
+    "lat": 18.0086,
+    "lng": 76.0712
+  },
+  {
+    "name": "Sipla Wind Farm",
+    "type": "Wind",
+    "lat": 27.2083,
+    "lng": 70.7181
+  },
+  {
+    "name": "Beluguppa Wind Park",
+    "type": "Wind",
+    "lat": 15.0115,
+    "lng": 77.1712
+  },
+  {
+    "name": "Mamatkheda Wind Park",
+    "type": "Wind",
+    "lat": 23.2769,
+    "lng": 74.9607
+  },
+  {
+    "name": "Anantapur Wind Park",
+    "type": "Wind",
+    "lat": 14.6826,
+    "lng": 77.6002
+  },
+  {
+    "name": "Theni Wind Power Plant",
+    "type": "Wind",
+    "lat": 10.0122,
+    "lng": 77.4839
+  },
+  {
+    "name": "Saundatti Wind Farm",
+    "type": "Wind",
+    "lat": 15.8234,
+    "lng": 74.6467
+  },
+
+  
+
+  {
+    "name": "Mandavi Tidal Power Project",
+    "type": "Tidal",
+    "lat": 22.8328,
+    "lng": 69.3531
+  },
+  {
+    "name": "Palli Solar Panchayat",
+    "type": "Solar",
+    "lat": 32.651,
+    "lng": 75.136
+  }
+]

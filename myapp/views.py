@@ -16,10 +16,7 @@ template_data = {
     ],
     "map_data": {
         "assets": [
-            {"id": 1, "type": "Plant", "status": "Existing", "name": "Reliance Jamnagar Complex", "lat": 22.3733, "lng": 70.0577, "capacity": 500},
-            {"id": 2, "type": "Storage", "status": "Planned", "name": "Adani Mundra Solar Park Storage", "lat": 22.84, "lng": 69.71, "capacity": 200},
-            {"id": 3, "type": "Plant", "status": "Planned", "name": "ACME Solar Plant, Rajasthan", "lat": 26.9124, "lng": 75.7873, "capacity": 350}
-        ],
+  ],
         "renewables": [
             {"id": 1, "type": "Solar", "name": "Bhadla Solar Park", "lat": 27.5333, "lng": 71.9167, "potential": 2245},
             {"id": 2, "type": "Wind", "name": "Muppandal Wind Farm", "lat": 8.2718, "lng": 77.5358, "potential": 1500}
@@ -43,6 +40,12 @@ template_data = {
 }
 
 
+with open("renewable_power_plants_india_large.json", "r") as f:
+    plants = json.load(f)
+
+
+for i, plant in enumerate(plants):
+    template_data["map_data"]["renewables"].append({"id": i, **plant })
 def home(request):
     context = {
         "template_data": template_data,
