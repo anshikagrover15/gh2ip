@@ -26,8 +26,6 @@ from django.test import TestCase
 #         new_block.longitude = float(row[1])
 #         new_block.land_price = float(row[2])
 #         new_block.save()
-
-############## Distance ################
 # from myapp.models import BlockTable, PowerPlant, DistBtoPTable, DemandLocation, DistBtoDTable
 # import math
 
@@ -88,3 +86,40 @@ from django.test import TestCase
 
 #     print(block)
  
+
+
+from myapp.models import *
+
+blocks = BlockTable.objects.all()
+max_distance_demand = 0
+max_dist_power =0 
+dist_demands = []
+dist_powers= []
+for block in blocks:
+    dist_demand =0 
+    query = DistBtoDTable.objects.filter(block=block)
+    for q in query:
+        dist_demand += q.distance
+    if dist_demand > max_distance_demand:
+        max_distance_demand = dist_demand
+    dist_demands.append(dist_demand)
+
+
+
+    dist_power =0 
+    query = DistBtoPTable.objects.filter(block=block)
+    for q in query:
+        print(block)
+        dist_power += q.distance
+    if dist_power > max_dist_power:
+        max_dist_power = dist_power
+    dist_powers.append(dist_power)
+
+print(dist_demands[:10])
+print(dist_powers[:10])
+
+for i, block in enumerate(blocks):
+    print(i)
+    block.distance_demand = dist_demands[i]/max_distance_demand
+    block.distance_plants = dist_powers[i]/max_dist_power
+    block.save()

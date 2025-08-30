@@ -113,33 +113,34 @@ def block_scores(request):
     demand_locs = DemandLocation.objects.all()
     for block in blocks:
         lp = block.land_price
-        demand_locs_score = 0
-        plants_score = 0
+        # demand_locs_score = 0
+        # plants_score = 0
 
-        for demand_loc in demand_locs:
-            try:
-                distance_obj = DistBtoDTable.objects.get(
-                block_id=block.id,
-                demand_location_id=demand_loc.id
-                )
-                demand_locs_score += (distance_obj.distance * demand_loc.weight)
-            except DistBtoDTable.DoesNotExist:
-                pass
+        # for demand_loc in demand_locs:
+        #     try:
+        #         distance_obj = DistBtoDTable.objects.get(
+        #         block_id=block.id,
+        #         demand_location_id=demand_loc.id
+        #         )
+        #         demand_locs_score += (distance_obj.distance * demand_loc.weight)
+        #     except DistBtoDTable.DoesNotExist:
+        #         pass
         
-        for plant in plants:
-            try:
-                distance_obj = DistBtoPTable.objects.get(
-                block_id=block.id,
-                power_plant_id=plant.id
-                )
-                plants_score += (distance_obj.distance * plant.weight)
-            except DistBtoPTable.DoesNotExist:
-                pass
+        # for plant in plants:
+        #     try:
+        #         distance_obj = DistBtoPTable.objects.get(
+        #         block_id=block.id,
+        #         power_plant_id=plant.id
+        #         )
+        #         plants_score += (distance_obj.distance * plant.weight)
+        #     except DistBtoPTable.DoesNotExist:
+        #         pass
 
         land_price_weight = 1
-        block_score = demand_locs_score + plants_score + (lp*land_price_weight)
+        block_score = (block.distance_demand + block.distance_plants + (lp*land_price_weight))/3
         block.score = block_score
         block.save()
+        print(block)
     
     return HttpResponse('Block Scores Updated!')
 
