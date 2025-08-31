@@ -65,7 +65,7 @@ const updateMapTheme = () => {
   }
   currentTileLayer = L.tileLayer(tileLayers[theme], {
     attribution:
-      "Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012",
+      "",
     maxZoom: 20,
   }).addTo(map);
 };
@@ -203,7 +203,11 @@ document.getElementById("runOptimisation").addEventListener("click", () => {
       },
       body: JSON.stringify(mults)
   })
-  .then(response => response.json()).then(json_response => populateLayers(json_response))
+  .then(response => response.json()).then(cLayers()).then(json_response => {
+    populateLayers(json_response.message);
+    mapData.optimisedLocations = json_response.top;
+    console.log(mapData.optimisedLocations);
+  })
   .catch((error) => {
       console.error('Error:', error);
   });
@@ -211,9 +215,9 @@ document.getElementById("runOptimisation").addEventListener("click", () => {
   layerGroups.optimised.clearLayers();
   setTimeout(() => {
     mapData.optimisedLocations.forEach((loc) =>
-      L.marker([loc.lat, loc.lng], { icon: icons.optimised() })
+      L.marker([loc[0], loc[1]], { icon: icons.optimised() })
         .bindPopup(
-          `<b>Optimal Location</b><br>Score: ${loc.score}/100<br>Reason: ${loc.reason}`
+          `<b>Optimal Location</b><br>Score: ${Math.trunc(100-loc[2]*100)}/100`
         )
         .addTo(layerGroups.optimised)
     );
@@ -222,8 +226,15 @@ document.getElementById("runOptimisation").addEventListener("click", () => {
   }, 2000); // This timeout simulates a backend process
 });
 
+function cLayers() {
+  layerGroups.demand.clearLayers();
+  layerGroups.renewables.clearLayers();
+  layerGroups.landPrices.clearLayers();
+  layerGroups.dottedRegion.clearLayers();
+}
+
 // --- INITIALIZE ---
 console.log(mapData)
 setInitialTheme();
 updateMapTheme();
-populateLayers();
+populateLayers(mapData.landPrices);

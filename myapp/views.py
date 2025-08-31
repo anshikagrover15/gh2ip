@@ -20,11 +20,22 @@ data_list = []
 #         data_list.append([latitude, longitude, land_price])
 # print(data_list)
 
-template_data = {
+
+
+
+# with open("renewable_power_plants_india_large.json", "r") as f:
+#     plants = json.load(f)
+
+
+# for i, plant in enumerate(plants):
+#     template_data["map_data"]["renewables"].append({"id": i, **plant })
+
+def home(request):
+    template_data = {
     "layers": [
         {"id": "renewableSources", "name": "Renewable Energy Sources", "checked": True},
         {"id": "demandCenters", "name": "Demand Centers", "checked": True},
-        {"id":"landPrices", "name":"Land Price heatmap", "checked": True},
+        {"id":"landPrices", "name":"Negative Score heatmap", "checked": True},
         {"id":"dottedRegion", "name":"Dotted Region", "checked": True}
 
     ],
@@ -46,20 +57,10 @@ template_data = {
             # {"lat": 25.4358, "lng": 81.8463, "score": 95, "reason": "High solar potential, proximity to industrial demand."},
             # {"lat": 17.3850, "lng": 78.4867, "score": 88, "reason": "Balanced renewable access and emerging tech hub demand."}
         ],
-        "landPrices":data_list
+        "landPrices":[]
     },
     
 }
-
-
-# with open("renewable_power_plants_india_large.json", "r") as f:
-#     plants = json.load(f)
-
-
-# for i, plant in enumerate(plants):
-#     template_data["map_data"]["renewables"].append({"id": i, **plant })
-
-def home(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
@@ -70,15 +71,23 @@ def home(request):
             blocks = list(BlockTable.objects.all().values())
             print(f"{plantMult}, {demandMult}, {landMult}")
             data_list = []
+            top_list = [(None, None, float('inf')), (None, None, float('inf')), (None, None,float('inf'))]  # keep track of 3 top_list
             for block in blocks:
-
-
                 latitude = float(block['latitude'])
                 longitude = float(block['longitude'])
                 score = block_scores(plantMult, demandMult,landMult, block)
                 data_list.append([latitude, longitude, score])
-
-            return JsonResponse({'status': 'ok', 'message': data_list})
+                if score < top_list[0][2]:
+                    top_list[2] = top_list[1]
+                    top_list[1] = top_list[0]
+                    top_list[0] = (latitude, longitude, score)
+                elif score < top_list[1][2]:
+                    top_list[2] = top_list[1]
+                    top_list[1] = (latitude, longitude, score)
+                elif score < top_list[2][2]:
+                    top_list[2] = (latitude, longitude, score)
+ 
+            return JsonResponse({'status': 'ok', 'message': data_list, 'top':top_list})
 
         except json.JSONDecodeError:
             return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
@@ -98,7 +107,6 @@ def home(request):
         latitude = float(block['latitude'])
         longitude = float(block['longitude'])
         score = block_scores(0.9,0.7,1, block)
-        data_list.append([latitude, longitude, score])
         template_data["map_data"]["landPrices"].append([latitude, longitude, score])
 
     # Demand Locations
