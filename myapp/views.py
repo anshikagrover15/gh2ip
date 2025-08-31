@@ -72,6 +72,7 @@ def home(request):
             print(f"{plantMult}, {demandMult}, {landMult}")
             data_list = []
             top_list = [(None, None, float('inf')), (None, None, float('inf')), (None, None,float('inf'))]  # keep track of 3 top_list
+            top_list = [(None, None, float('inf')), (None, None, float('inf')), (None, None,float('inf'))]  # keep track of 3 top_list
             for block in blocks:
                 latitude = float(block['latitude'])
                 longitude = float(block['longitude'])
